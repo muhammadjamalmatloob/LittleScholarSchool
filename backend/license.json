@@ -1,0 +1,25 @@
+{
+  "is_activated": true,
+  "is_dev_mode": false,
+  "license_key": "SCH-2026-LITTLE",
+  "hardware_id": "58E22545DAC2BDBB",
+  "school_name": "Little Scholor School",
+  "school_logo_url": "",
+  "plan_name": "Essential Bundle",
+  "expires_at": "2027-12-30T19:00:00.000Z",
+  "modules": {
+    "students": true,
+    "classes": true,
+    "teachers": false,
+    "courses": true,
+    "attendance": false,
+    "fees": true,
+    "exams": true,
+    "timetable": false,
+    "reports": true,
+    "promotion": true,
+    "lan_mobile": false
+  },
+  "activated_at": "2026-11-06T09:00:36.594706+00:00",
+  "signature": "fafaf982e0d2b5a42171dd662812d110e82e2ccf9bfe45d4ad5c9951f0f9b6a3"
+}

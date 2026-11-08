@@ -1,0 +1,12 @@
+{
+  "name": "school-management-electron",
+  "version": "1.0.0",
+  "description": "Desktop wrapper for School Management System",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^27.0.0"
+  }
+}

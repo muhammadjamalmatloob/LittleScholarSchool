@@ -1,0 +1,11 @@
+{
+  "appId": "com.littlescholar.school",
+  "appName": "Little Scholar",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "http",
+    "cleartext": true
+  }
+}
+

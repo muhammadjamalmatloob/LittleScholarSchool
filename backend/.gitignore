@@ -1,0 +1,14 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.env
+.env.local
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+backups/
+.pytest_cache/
+.coverage
+htmlcov/
