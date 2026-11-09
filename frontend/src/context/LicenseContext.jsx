@@ -1,3 +1,4 @@
+import { SCHOOL_LOGO_DATA_URI } from "../assets/schoolLogo";
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { client, extractErrorMessage, getApiBaseUrl } from "../api/client";
 
@@ -14,7 +15,7 @@ export const formatGoogleDriveUrl = (url) => {
 };
 
 export const resolveSchoolLogoUrl = (url, activatedAt) => {
-  if (!url || typeof url !== "string") return "/logo.jpg";
+  if (!url || typeof url !== "string") return SCHOOL_LOGO_DATA_URI;
   const formatted = formatGoogleDriveUrl(url);
   if (formatted.startsWith("/api")) {
     const apiBase = getApiBaseUrl();
@@ -39,9 +40,9 @@ export const LicenseProvider = ({ children }) => {
       courses: true,
       attendance: true,
       exams: true,
-      timetable: true,
+      timetable: false,
       fees: true,
-      teachers: true,
+      teachers: false,
       promotion: true,
       reports: true,
     },
@@ -74,7 +75,7 @@ export const LicenseProvider = ({ children }) => {
     loading: false,
     error: null,
     schoolName: "Little Scholar School System",
-    schoolLogo: "/logo.png",
+    schoolLogo: SCHOOL_LOGO_DATA_URI,
     planName: "School Edition",
     isActivated: true,
     isExpired: false,
@@ -100,7 +101,7 @@ export const useLicense = () => {
       loading: false,
       error: null,
       schoolName: "Little Scholar School System",
-      schoolLogo: "/logo.png",
+      schoolLogo: SCHOOL_LOGO_DATA_URI,
       planName: "School Edition",
       isActivated: true,
       isExpired: false,

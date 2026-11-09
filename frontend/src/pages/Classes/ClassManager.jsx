@@ -1,7 +1,6 @@
 ﻿import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { classApi } from "../../api/classes";
-import { teacherApi } from "../../api/teachers";
 import { useToast } from "../../context/ToastContext";
 import { useLicense } from "../../context/LicenseContext";
 import { validateClassCapacity, validateName } from "../../utils/validation";
@@ -49,11 +48,9 @@ const getAvatarGradient = (identifier = "", index = 0) => {
 
 export const ClassManager = () => {
   const { hasModule } = useLicense();
-  const canManageTeachers = hasModule("teachers");
-
+  
   const [classes, setClasses] = useState([]);
-  const [teachers, setTeachers] = useState([]);
-  const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedClassFilter, setSelectedClassFilter] = useState("all");
   const [selectedSectionFilter, setSelectedSectionFilter] = useState("all");
@@ -69,9 +66,7 @@ export const ClassManager = () => {
   const [formData, setFormData] = useState({
     name: "Class 1",
     section: "",
-    class_teacher_id: null,
-    teacher_name: "",
-    capacity: 40,
+            capacity: 40,
     monthly_fee: 3500,
     academic_year: "2024-2025",
   });
@@ -80,26 +75,15 @@ export const ClassManager = () => {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const promises = [classApi.getAll()];
-      if (canManageTeachers) {
-        promises.push(
-          teacherApi.getAll().catch(() => ({ items: [] }))
-        );
-      }
-      const [classList, teacherRes] = await Promise.all(promises);
+      const [classList] = await Promise.all([classApi.getAll()]);
       setClasses(classList || []);
-      if (teacherRes) {
-        setTeachers(teacherRes?.items || (Array.isArray(teacherRes) ? teacherRes : []));
-      } else {
-        setTeachers([]);
-      }
     } catch (err) {
       console.error("Error loading class data:", err);
       toast.error("Failed to load classes list.", "Loading Error");
     } finally {
       setLoading(false);
     }
-  }, [canManageTeachers, toast]);
+  }, [toast]);
 
   useEffect(() => {
     loadData();
@@ -111,9 +95,7 @@ export const ClassManager = () => {
     setFormData({
       name: "Class 1",
       section: "A",
-      class_teacher_id: null,
-      teacher_name: "",
-      capacity: 40,
+                  capacity: 40,
       monthly_fee: 3500,
       academic_year: "2024-2025",
     });
@@ -126,9 +108,7 @@ export const ClassManager = () => {
     setFormData({
       name: "",
       section: "A",
-      class_teacher_id: canManageTeachers ? (teachers[0]?.id || "") : null,
-      teacher_name: canManageTeachers ? (teachers[0]?.full_name || "") : "",
-      capacity: 40,
+                  capacity: 40,
       monthly_fee: 3500,
       academic_year: "2024-2025",
     });
@@ -141,9 +121,7 @@ export const ClassManager = () => {
     setFormData({
       name: cls.name,
       section: cls.section,
-      class_teacher_id: cls.class_teacher_id || (teachers[0]?.id || 1),
-      teacher_name: cls.teacher_name || teachers[0]?.full_name || "Faculty Member",
-      capacity: cls.capacity || 40,
+                  capacity: cls.capacity || 40,
       monthly_fee: cls.monthly_fee || 3500,
       academic_year: cls.academic_year || "2024-2025",
     });
@@ -180,8 +158,7 @@ export const ClassManager = () => {
         name: formData.name.trim(),
         section: customClass || editingClass ? formData.section : nextSection,
         capacity: parseInt(formData.capacity, 10) || 40,
-        class_teacher_id: formData.class_teacher_id ? parseInt(formData.class_teacher_id, 10) : undefined,
-        monthly_fee: formData.monthly_fee ? parseFloat(formData.monthly_fee) : 3500,
+                monthly_fee: formData.monthly_fee ? parseFloat(formData.monthly_fee) : 3500,
       };
 
       if (editingClass) {
@@ -223,8 +200,7 @@ export const ClassManager = () => {
     return classes.filter((cls) => {
       const matchesSearch =
         cls.name.toLowerCase().includes(search.toLowerCase()) ||
-        cls.section.toLowerCase().includes(search.toLowerCase()) ||
-        (cls.teacher_name && cls.teacher_name.toLowerCase().includes(search.toLowerCase()));
+        cls.section.toLowerCase().includes(search.toLowerCase());
 
       const matchesClass =
         selectedClassFilter === "all" ||
@@ -298,7 +274,7 @@ export const ClassManager = () => {
             <Search className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
-              placeholder="Search class, section, teacher..."
+              placeholder="Search class, section..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-11 pr-4 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 placeholder-slate-400 text-sm font-medium focus:outline-none focus:border-blue-500 transition"
@@ -368,9 +344,7 @@ export const ClassManager = () => {
                       <h3 className="font-bold text-slate-900 dark:text-white text-base">
                         {cls.name} - Sec {cls.section || "A"}
                       </h3>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
-                        Class Incharge: {cls.teacher_name || "Unassigned"}
-                      </p>
+                      
                     </div>
                   </div>
 
@@ -497,51 +471,6 @@ export const ClassManager = () => {
                 )}
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase mb-1">
-                  Class Incharge / Teacher
-                </label>
-                {canManageTeachers ? (
-                  <select
-                    value={formData.class_teacher_id || ""}
-                    onChange={(e) => {
-                      const tid = e.target.value ? parseInt(e.target.value, 10) : null;
-                      const sel = teachers.find((t) => t.id === tid);
-                      setFormData({
-                        ...formData,
-                        class_teacher_id: tid,
-                        teacher_name: sel ? sel.full_name : "",
-                      });
-                    }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
-                  >
-                    <option value="">Select Class Teacher</option>
-                    {teachers.map((t) => {
-                      const assignedCls = classes.find(
-                        (c) => c.class_teacher_id === t.id && c.id !== editingClass?.id
-                      );
-                      return (
-                        <option key={t.id} value={t.id} disabled={Boolean(assignedCls)}>
-                          {t.full_name}
-                          {assignedCls
-                            ? ` (Already Incharge of ${assignedCls.name} - ${assignedCls.section || "A"})`
-                            : ""}
-                        </option>
-                      );
-                    })}
-                  </select>
-                ) : (
-                  <input
-                    type="text"
-                    value={formData.teacher_name || ""}
-                    onChange={(e) =>
-                      setFormData({ ...formData, teacher_name: e.target.value })
-                    }
-                    placeholder="e.g. Ms. Sana Tariq (or leave blank)"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
-                  />
-                )}
-              </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>

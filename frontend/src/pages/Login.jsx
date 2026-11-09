@@ -1,3 +1,4 @@
+import { SCHOOL_LOGO_DATA_URI } from "../assets/schoolLogo";
 ﻿import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -214,22 +215,6 @@ export const Login = () => {
   return (
     <div className="min-h-screen w-full relative flex items-center justify-center p-4 sm:p-6 md:p-8 bg-slate-50 dark:bg-slate-950 overflow-hidden selection:bg-blue-500 selection:text-white">
 
-      {/* Top Floating Controls: Wi-Fi Server Connection & Theme Toggle */}
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-40 flex items-center gap-2">
-        <button
-          type="button"
-          onClick={() => setShowServerModal(true)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-xs border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-300 dark:hover:border-blue-700 transition cursor-pointer"
-          title="Configure Wi-Fi Server Connection"
-        >
-          <Wifi className="w-3.5 h-3.5 text-blue-500" />
-          <span className="hidden sm:inline">Server IP</span>
-        </button>
-        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-1.5 rounded-full shadow-xs border border-slate-200 dark:border-slate-800 transition-transform hover:scale-105">
-          <ThemeToggle />
-        </div>
-      </div>
-
       {/* Central Illustrated Stage */}
       <div className="relative w-full max-w-[420px] my-10 flex items-center justify-center">
 
@@ -314,7 +299,7 @@ export const Login = () => {
           {/* School Crest inside Circular Container */}
           <div className="bg-white rounded-full h-28 w-28 mx-auto flex items-center justify-center p-2 mb-5 shadow-sm border-2 border-slate-900/90 ring-4 ring-slate-100 dark:ring-slate-800">
             <img
-              src="/logo.svg"
+              src={SCHOOL_LOGO_DATA_URI}
               alt="Little Scholar School System"
               className="h-full w-full object-contain"
             />

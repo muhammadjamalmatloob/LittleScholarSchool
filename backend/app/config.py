@@ -5,11 +5,21 @@ from dotenv import load_dotenv
 
 if getattr(sys, "frozen", False):
     # Running inside PyInstaller compiled executable:
-    # User data (database, licenses, backups, logos) MUST live permanently on disk in 'data' next to .exe
-    EXE_DIR = Path(sys.executable).parent
-    DATA_DIR = EXE_DIR / "data"
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    # When installed under C:\Program Files, the application directory is READ-ONLY for standard users.
+    # Writable user data (database, licenses, backups, logos) MUST live in %APPDATA%/little-scholar-school-system
+    appdata_env = os.environ.get("APPDATA")
+    if appdata_env:
+        DATA_DIR = Path(appdata_env) / "little-scholar-school-system"
+    else:
+        DATA_DIR = Path.home() / ".little-scholar-school-system"
+
+    try:
+        DATA_DIR.mkdir(parents=True, exist_ok=True)
+    except Exception:
+        pass
+
     BACKEND_DIR = DATA_DIR
+    EXE_DIR = Path(sys.executable).parent
     APP_DIR = Path(getattr(sys, "_MEIPASS", EXE_DIR)) / "backend" / "app"
 else:
     APP_DIR = Path(__file__).resolve().parent
@@ -59,8 +69,11 @@ class Settings:
     # Canonical SQLite path: ALWAYS stored in backend/school_data.db
     canonical_db_file = (BACKEND_DIR / "school_data.db").resolve()
     raw_db_url = os.getenv("DATABASE_URL", "")
+    custom_db_path = os.getenv("DATABASE_PATH", "")
 
-    if (
+    if custom_db_path and custom_db_path.strip():
+        DATABASE_URL: str = f"sqlite:///{Path(custom_db_path.strip()).resolve().as_posix()}"
+    elif (
         not raw_db_url
         or raw_db_url.strip() == "sqlite:///./school_data.db"
         or raw_db_url.strip() == "sqlite:///school_data.db"

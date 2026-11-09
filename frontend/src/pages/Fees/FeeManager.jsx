@@ -495,72 +495,72 @@ export const FeeManager = () => {
         </div>
       )}
 
-      {/* Financial Metric Cards */}
+      {/* Financial Metric Cards - Unified Dark Blue Styling */}
       <div className="print:hidden grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Total Billed: bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30 */}
-        <div className="p-5 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
+        {/* Total Billed */}
+        <div className="p-5 rounded-2xl bg-gradient-to-br from-[#0c2340] to-[#1e3a8a] text-white shadow-md shadow-blue-950/20 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden select-none">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-white/85">
+            <span className="text-xs font-semibold text-blue-200">
               Total Billed ({selectedMonth})
             </span>
-            <div className="w-10 h-10 rounded-xl bg-white/20 text-white flex items-center justify-center backdrop-blur-xs">
+            <div className="w-10 h-10 rounded-xl bg-white/15 text-white flex items-center justify-center backdrop-blur-xs border border-white/20">
               <Receipt className="w-5 h-5" />
             </div>
           </div>
-          <p className="text-2xl sm:text-3xl font-extrabold text-white mt-2 tracking-tight">
+          <p className="text-2xl sm:text-3xl font-black text-white mt-2 tracking-tight">
             Rs. {stats.totalBilled.toLocaleString()}
           </p>
-          <p className="text-xs text-white/80 mt-1">Across all registered students</p>
+          <p className="text-xs text-blue-200 mt-1">Across all registered students</p>
         </div>
 
-        {/* Total Recovered: bg-gradient-to-br from-emerald-400 to-blue-500 text-white shadow-lg shadow-blue-500/30 */}
-        <div className="p-5 rounded-2xl bg-gradient-to-br from-emerald-400 to-blue-500 text-white shadow-lg shadow-blue-500/30 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
+        {/* Total Recovered */}
+        <div className="p-5 rounded-2xl bg-gradient-to-br from-[#0c2340] to-[#1e3a8a] text-white shadow-md shadow-blue-950/20 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden select-none">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-white/85">
+            <span className="text-xs font-semibold text-blue-200">
               Total Recovered
             </span>
-            <div className="w-10 h-10 rounded-xl bg-white/20 text-white flex items-center justify-center backdrop-blur-xs">
+            <div className="w-10 h-10 rounded-xl bg-white/15 text-white flex items-center justify-center backdrop-blur-xs border border-white/20">
               <Wallet className="w-5 h-5" />
             </div>
           </div>
-          <p className="text-2xl sm:text-3xl font-extrabold text-white mt-2 tracking-tight">
+          <p className="text-2xl sm:text-3xl font-black text-white mt-2 tracking-tight">
             Rs. {stats.totalCollected.toLocaleString()}
           </p>
-          <p className="text-xs text-white/90 font-semibold mt-1">
+          <p className="text-xs text-blue-200 font-semibold mt-1">
             {stats.recoveryRate}% Recovery ratio
           </p>
         </div>
 
-        {/* Pending Balance: bg-gradient-to-br from-rose-400 to-red-500 text-white shadow-lg shadow-rose-500/30 */}
-        <div className="p-5 rounded-2xl bg-gradient-to-br from-rose-400 to-red-500 text-white shadow-lg shadow-rose-500/30 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
+        {/* Pending Balance */}
+        <div className="p-5 rounded-2xl bg-gradient-to-br from-[#0c2340] to-[#1e3a8a] text-white shadow-md shadow-blue-950/20 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden select-none">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-white/85">
+            <span className="text-xs font-semibold text-blue-200">
               Pending Balance
             </span>
-            <div className="w-10 h-10 rounded-xl bg-white/20 text-white flex items-center justify-center backdrop-blur-xs">
+            <div className="w-10 h-10 rounded-xl bg-white/15 text-white flex items-center justify-center backdrop-blur-xs border border-white/20">
               <AlertCircle className="w-5 h-5" />
             </div>
           </div>
-          <p className="text-2xl sm:text-3xl font-extrabold text-white mt-2 tracking-tight">
+          <p className="text-2xl sm:text-3xl font-black text-white mt-2 tracking-tight">
             Rs. {stats.totalPending.toLocaleString()}
           </p>
-          <p className="text-xs text-white/80 mt-1">Unpaid student vouchers</p>
+          <p className="text-xs text-blue-200 mt-1">Unpaid student vouchers</p>
         </div>
 
-        {/* Board Candidates: bg-gradient-to-br from-blue-400 to-blue-500 text-white shadow-lg shadow-blue-500/30 */}
-        <div className="p-5 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-500 text-white shadow-lg shadow-blue-500/30 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
+        {/* Board Candidates */}
+        <div className="p-5 rounded-2xl bg-gradient-to-br from-[#0c2340] to-[#1e3a8a] text-white shadow-md shadow-blue-950/20 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden select-none">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-white/85">
+            <span className="text-xs font-semibold text-blue-200">
               Board Candidates (9 & 10)
             </span>
-            <div className="w-10 h-10 rounded-xl bg-white/20 text-white flex items-center justify-center backdrop-blur-xs">
+            <div className="w-10 h-10 rounded-xl bg-white/15 text-white flex items-center justify-center backdrop-blur-xs border border-white/20">
               <Award className="w-5 h-5" />
             </div>
           </div>
-          <p className="text-2xl sm:text-3xl font-extrabold text-white mt-2 tracking-tight">
+          <p className="text-2xl sm:text-3xl font-black text-white mt-2 tracking-tight">
             {stats.boardStudentsCount} Students
           </p>
-          <p className="text-xs text-white/90 font-semibold mt-1">
+          <p className="text-xs text-blue-200 font-semibold mt-1">
             Includes Board Registration Fee
           </p>
         </div>

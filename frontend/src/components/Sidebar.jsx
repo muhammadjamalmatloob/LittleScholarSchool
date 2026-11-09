@@ -1,3 +1,4 @@
+import { SCHOOL_LOGO_DATA_URI } from "../assets/schoolLogo";
 import React from "react";
 import { NavLink } from "react-router-dom";
 import {
@@ -56,11 +57,7 @@ export const Sidebar = () => {
           path: "/marksheet",
           icon: Award,
         },
-        {
-          name: "Timetable",
-          path: "/timetable",
-          icon: Calendar,
-        },
+        
       ],
     },
     {
@@ -71,11 +68,7 @@ export const Sidebar = () => {
           path: "/fees",
           icon: CreditCard,
         },
-        {
-          name: "Teachers & Staff",
-          path: "/teachers",
-          icon: GraduationCap,
-        },
+        
       ],
     },
   ];
@@ -113,13 +106,9 @@ export const Sidebar = () => {
             >
               <div className="bg-white rounded-full h-11 w-11 flex items-center justify-center p-2 shadow-sm ring-2 ring-blue-500/20 shrink-0 overflow-hidden">
                 <img
-                  src={schoolLogo || "/logo.png"}
+                  src={SCHOOL_LOGO_DATA_URI}
                   alt={schoolName || "Little Scholar School System"}
-                  referrerPolicy="no-referrer"
                   className="h-full w-full object-contain"
-                  onError={(e) => {
-                    e.currentTarget.src = "/logo.png";
-                  }}
                 />
               </div>
             </button>

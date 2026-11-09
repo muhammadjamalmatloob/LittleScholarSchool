@@ -1,7 +1,6 @@
 ﻿import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { courseApi } from "../../api/courses";
-import { teacherApi } from "../../api/teachers";
 import { classApi } from "../../api/classes";
 import { useToast } from "../../context/ToastContext";
 import { useLicense } from "../../context/LicenseContext";
@@ -50,136 +49,19 @@ const getAvatarGradient = (identifier = "", index = 0) => {
   return AVATAR_GRADIENTS[Math.abs(code) % AVATAR_GRADIENTS.length];
 };
 
-// Dedicated Teacher Assignment Modal with Escape keydown listener
-export const TeacherAssignmentModal = ({
-  isOpen = false,
-  onClose,
-  selectedCourse,
-  teachers = [],
-  selectedTeacherId,
-  setSelectedTeacherId,
-  onSubmit,
-}) => {
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape" && isOpen) {
-        onClose?.();
-      }
-    };
-
-    if (isOpen) {
-      window.addEventListener("keydown", handleKeyDown);
-    }
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isOpen, onClose]);
-
-  return (
-    <AnimatePresence>
-      {isOpen && selectedCourse && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          {/* Dismiss backdrop click */}
-          <div
-            className="absolute inset-0"
-            onClick={onClose}
-            aria-hidden="true"
-          />
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
-            className="relative bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-800 p-6 max-w-md w-full"
-          >
-            <button
-              type="button"
-              onClick={onClose}
-              className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 flex items-center justify-center font-bold">
-                <UserCheck className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-slate-900">Assign Subject Teacher</h3>
-                <p className="text-xs text-slate-500">
-                  {selectedCourse.course_name} • {selectedCourse.class_name} ({selectedCourse.section})
-                </p>
-              </div>
-            </div>
-
-            <form onSubmit={onSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                  Select Faculty / Subject Teacher
-                </label>
-                <select
-                  value={selectedTeacherId}
-                  onChange={(e) => setSelectedTeacherId(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 text-base font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 bg-white dark:bg-slate-800"
-                  required
-                >
-                  {teachers.map((t) => (
-                    <option key={t.id} value={t.id}>
-                      {t.full_name} ({t.teacher_code || "Faculty"})
-                    </option>
-                  ))}
-                </select>
-                <p className="text-xs text-slate-400 mt-1.5">
-                  This teacher will be authorized to enter and submit marks for this subject during exams.
-                </p>
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
-                <GlassButton
-                  type="button"
-                  variant="secondary"
-                  onClick={onClose}
-                  className="px-4 py-2 text-sm font-medium"
-                >
-                  Cancel
-                </GlassButton>
-                <GlassButton
-                  type="submit"
-                  variant="primary"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 text-sm font-bold shadow-xs"
-                >
-                  Confirm Assignment
-                </GlassButton>
-              </div>
-            </form>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
-  );
-};
-
 export const CourseManager = () => {
   const { hasModule } = useLicense();
-  const canManageTeachers = hasModule("teachers");
-  const canManageClasses = hasModule("classes");
+    const canManageClasses = hasModule("classes");
 
   const [courses, setCourses] = useState([]);
-  const [teachers, setTeachers] = useState([]);
-  const [classes, setClasses] = useState([]);
+    const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedSectionFilter, setSelectedSectionFilter] = useState("all");
 
   const toast = useToast();
 
-  // Assign Teacher Modal
-  const [assignModalOpen, setAssignModalOpen] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const [selectedTeacherId, setSelectedTeacherId] = useState("");
-
+  
   // Add / Edit Course Modal
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [editingCourseId, setEditingCourseId] = useState(null);
@@ -188,9 +70,7 @@ export const CourseManager = () => {
     section: "A",
     course_name: "",
     max_marks: 100,
-    teacher_id: 1,
-    teacher_name: "Ms. Sana Tariq",
-    enrollment_limit: 100,
+            enrollment_limit: 100,
     room: "Room 101",
   });
 
@@ -198,20 +78,14 @@ export const CourseManager = () => {
     setLoading(true);
     try {
       const promises = [courseApi.getAll()];
-      if (canManageTeachers) {
-        promises.push(teacherApi.getAll().catch(() => []));
-      } else {
-        promises.push(Promise.resolve([]));
-      }
       if (canManageClasses) {
         promises.push(classApi.getAll().catch(() => []));
       } else {
         promises.push(Promise.resolve([]));
       }
 
-      const [cData, tData, clsData] = await Promise.all(promises);
+      const [cData, clsData] = await Promise.all(promises);
       setCourses(cData || []);
-      setTeachers(tData?.items || (Array.isArray(tData) ? tData : []));
       setClasses(clsData || []);
     } catch (err) {
       console.error("Error loading courses:", err);
@@ -219,7 +93,7 @@ export const CourseManager = () => {
     } finally {
       setLoading(false);
     }
-  }, [canManageTeachers, canManageClasses, toast]);
+  }, [canManageClasses, toast]);
 
   useEffect(() => {
     loadData();
@@ -256,47 +130,11 @@ export const CourseManager = () => {
       const q = search.toLowerCase();
       const matchesSection = portion.key.toLowerCase().includes(q);
       const matchesCourse = portion.courses.some(
-        (c) =>
-          c.course_name.toLowerCase().includes(q) ||
-          c.teacher_name?.toLowerCase().includes(q)
+        (c) => c.course_name.toLowerCase().includes(q)
       );
       return matchesSection || matchesCourse;
     });
   }, [sectionPortions, selectedSectionFilter, search]);
-
-  // Handle Teacher Assignment
-  const handleOpenAssign = (course) => {
-    setSelectedCourse(course);
-    setSelectedTeacherId(course.teacher_id?.toString() || (teachers[0]?.id?.toString() || "1"));
-    setAssignModalOpen(true);
-  };
-
-  const handleSaveTeacherAssignment = async (e) => {
-    e.preventDefault();
-    if (!selectedCourse) return;
-    const tid = parseInt(selectedTeacherId, 10);
-    const tObj = teachers.find((t) => t.id === tid);
-    const teacherName = tObj ? tObj.full_name : "Assigned Faculty";
-
-    try {
-      await courseApi.assignTeacher(selectedCourse.id, tid, teacherName);
-      setCourses((prev) =>
-        prev.map((c) =>
-          c.id === selectedCourse.id
-            ? { ...c, teacher_id: tid, teacher_name: teacherName }
-            : c
-        )
-      );
-      toast.success(
-        `Teacher ${teacherName} assigned to ${selectedCourse.course_name} (${selectedCourse.class_name} - Sec ${selectedCourse.section})`,
-        "Assignment Confirmed"
-      );
-      setAssignModalOpen(false);
-      loadData();
-    } catch (err) {
-      toast.error("Could not assign teacher to course.", "Assignment Error");
-    }
-  };
 
   // Handle Add / Edit Course
   const handleOpenAdd = (portion = null) => {
@@ -306,9 +144,7 @@ export const CourseManager = () => {
       section: portion?.section || "A",
       course_name: "",
       max_marks: 100,
-      teacher_id: teachers[0]?.id || 1,
-      teacher_name: teachers[0]?.full_name || "Teacher",
-      enrollment_limit: 100,
+                  enrollment_limit: 100,
       room: "Room 101",
     });
     setAddModalOpen(true);
@@ -321,9 +157,7 @@ export const CourseManager = () => {
       section: course.section || "A",
       course_name: course.course_name || course.name || "",
       max_marks: course.max_marks || 100,
-      teacher_id: course.teacher_id || teachers[0]?.id || 1,
-      teacher_name: course.teacher_name || "Teacher",
-      enrollment_limit: course.enrollment_limit || 100,
+                  enrollment_limit: course.enrollment_limit || 100,
       room: course.room || "Room 101",
     });
     setAddModalOpen(true);
@@ -354,9 +188,7 @@ export const CourseManager = () => {
     }
 
     try {
-      const selectedTeacher = teachers.find(
-        (t) => t.id === parseInt(newCourseData.teacher_id, 10)
-      );
+
       const matchingClass = classes.find(
         (c) =>
           c.name.toLowerCase() === newCourseData.class_name.toLowerCase() &&
@@ -369,8 +201,7 @@ export const CourseManager = () => {
         class_id: matchingClass ? matchingClass.id : undefined,
         max_marks: maxMarks,
         enrollment_limit: parseInt(newCourseData.enrollment_limit, 10),
-        teacher_name: selectedTeacher ? selectedTeacher.full_name : "Teacher",
-      };
+              };
       if (editingCourseId) {
         await courseApi.update(editingCourseId, payload);
         toast.success(`${payload.course_name} updated successfully.`, "Course Updated");
@@ -409,7 +240,7 @@ export const CourseManager = () => {
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-blue-600" />
             <span className="text-xs font-semibold text-slate-500">
-              Courses &amp; Faculty
+              Courses &amp; Subjects
             </span>
             <span className="text-slate-300 dark:text-slate-600">•</span>
             <span className="text-xs text-slate-500 font-medium">
@@ -438,7 +269,7 @@ export const CourseManager = () => {
             <Search className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
-              placeholder="Search course title, code, section, or teacher..."
+              placeholder="Search course title, code, or section..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-11 pr-4 py-2.5 rounded-xl w-full pl-11 pr-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-sm font-medium focus:outline-none focus:border-blue-500 transition"
@@ -593,16 +424,8 @@ export const CourseManager = () => {
         </div>
       )}
 
-      {/* Assign Teacher Modal */}
-      <TeacherAssignmentModal
-        isOpen={assignModalOpen}
-        onClose={() => setAssignModalOpen(false)}
-        selectedCourse={selectedCourse}
-        teachers={teachers}
-        selectedTeacherId={selectedTeacherId}
-        setSelectedTeacherId={setSelectedTeacherId}
-        onSubmit={handleSaveTeacherAssignment}
-      />
+      
+      
 
       {/* Add New Course Modal */}
       {addModalOpen && (
@@ -732,30 +555,7 @@ export const CourseManager = () => {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
-                  Assign Subject Teacher
-                </label>
-                <select
-                  value={newCourseData.teacher_id}
-                  onChange={(e) => {
-                    const tid = parseInt(e.target.value, 10);
-                    const selected = teachers.find((t) => t.id === tid);
-                    setNewCourseData({
-                      ...newCourseData,
-                      teacher_id: tid,
-                      teacher_name: selected ? selected.full_name : "Teacher",
-                    });
-                  }}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 text-sm font-medium focus:outline-none focus:border-blue-600 bg-white dark:bg-slate-800"
-                >
-                  {teachers.map((t) => (
-                    <option key={t.id} value={t.id}>
-                      {t.full_name} ({t.teacher_code || "Faculty"})
-                    </option>
-                  ))}
-                </select>
-              </div>
+              
 
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                 <GlassButton

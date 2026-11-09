@@ -1,3 +1,4 @@
+import { SCHOOL_LOGO_DATA_URI } from "../assets/schoolLogo";
 import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
@@ -1483,7 +1484,7 @@ export const Exams = () => {
                     <tr style={{ border: "none" }}>
                       <td style={{ width: "68px", verticalAlign: "middle", padding: "0 12px 10px 0", border: "none" }}>
                         <img
-                          src="/logo-transparent.png"
+                          src={SCHOOL_LOGO_DATA_URI}
                           alt="Little Scholar School System"
                           onError={(e) => {
                             e.target.onerror = null;
@@ -1624,7 +1625,7 @@ export const Exams = () => {
                   <tr style={{ border: "none" }}>
                     <td style={{ width: "68px", verticalAlign: "middle", padding: "0 12px 10px 0", border: "none" }}>
                       <img
-                        src="/logo-transparent.png"
+                        src={SCHOOL_LOGO_DATA_URI}
                         alt="Little Scholar School System"
                         style={{ width: "60px", height: "60px", objectFit: "contain", display: "block" }}
                       />
@@ -1715,7 +1716,7 @@ export const Exams = () => {
                   <tr style={{ border: "none" }}>
                     <td style={{ width: "68px", verticalAlign: "middle", padding: "0 12px 10px 0", border: "none" }}>
                       <img
-                        src="/logo-transparent.png"
+                        src={SCHOOL_LOGO_DATA_URI}
                         alt="Little Scholar School System"
                         style={{ width: "60px", height: "60px", objectFit: "contain", display: "block" }}
                       />

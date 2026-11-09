@@ -43,12 +43,17 @@ pnpm-debug.log*
 lerna-debug.log*
 .eslintcache
 
-# 5. Build Outputs & Distributions
+# 5. Build Outputs & Distributions (Frontend, Electron & PyInstaller)
 dist/
 dist-ssr/
 build/
 out/
 *.exe
+*.blockmap
+*.nsis.7z
+electron/dist-installer/
+electron/api-server/
+*.spec
 
 # 6. Android & Mobile Builds (Capacitor)
 .gradle/
@@ -83,9 +88,10 @@ $RECYCLE.BIN/
 *.tmp
 *.bak
 
-# 8. Temporary Logs
+# 8. Temporary Logs & Runtime Files
 logs/
 *.log
+backend_server.log
 
 # 9. AI Agent Scratch & Workflows
 .agents/

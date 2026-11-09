@@ -1,12 +1,58 @@
 {
-  "name": "school-management-electron",
+  "name": "little-scholar-school-system",
   "version": "1.0.0",
-  "description": "Desktop wrapper for School Management System",
+  "description": "Desktop Application for Little Scholar School System",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build:frontend": "npm run build --prefix ../frontend",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "pk.edu.littlescholar.schoolmanagement",
+    "productName": "Little Scholar School System",
+    "directories": {
+      "output": "dist-installer"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "../app_icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Little Scholar School System"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      {
+        "from": "../frontend/dist",
+        "to": "dist",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "extraResources": [
+      {
+        "from": "api-server",
+        "to": "api-server",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "../backend/school_data.db",
+        "to": "school_data.db"
+      }
+    ]
   },
   "devDependencies": {
-    "electron": "^27.0.0"
+    "electron": "^27.3.11",
+    "electron-builder": "^24.13.3"
   }
 }

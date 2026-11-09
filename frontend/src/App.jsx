@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
+import { BrowserRouter, HashRouter, Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { AuthProvider } from "./context/AuthContext";
 import { ToastProvider } from "./context/ToastContext";
@@ -9,13 +9,10 @@ import { Login } from "./pages/Login";
 import { Dashboard } from "./pages/Dashboard";
 import { StudentList } from "./pages/Students/StudentList";
 import { StudentDetail } from "./pages/Students/StudentDetail";
-import { TeacherList } from "./pages/Teachers/TeacherList";
-import { TeacherDetail } from "./pages/Teachers/TeacherDetail";
 import { ClassManager } from "./pages/Classes/ClassManager";
 import { CourseManager } from "./pages/Courses/CourseManager";
 import { FeeManager } from "./pages/Fees/FeeManager";
 import { Exams } from "./pages/Exams";
-import { Timetable } from "./pages/Timetable";
 import { AcademicYearList } from "./pages/AcademicYears/AcademicYearList";
 import { StudentPromotion } from "./pages/Admin/StudentPromotion";
 import { AppLayout } from "./layouts/AppLayout";
@@ -44,9 +41,12 @@ function AnimatedOutlet() {
   );
 }
 
+const isElectronOrFile = typeof window !== 'undefined' && (window.location.protocol === 'file:' || Boolean(window.navigator?.userAgent?.includes('Electron')));
+
 export default function App() {
+  const Router = isElectronOrFile ? HashRouter : BrowserRouter;
   return (
-    <BrowserRouter>
+    <Router>
       <ToastProvider>
         <LicenseProvider>
           <AuthProvider>
@@ -77,26 +77,9 @@ export default function App() {
                 <Route path="students" element={<StudentList />} />
                 <Route path="students/:id" element={<StudentDetail />} />
 
-                {/* Teacher Management */}
-                <Route
-                  path="teachers"
-                  element={
-                    <ProtectedRoute allowedRoles={["admin", "principal"]}>
-                      <ModuleRoute module="teachers">
-                        <TeacherList />
-                      </ModuleRoute>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="teachers/:id"
-                  element={
-                    <ModuleRoute module="teachers">
-                      <TeacherDetail />
-                    </ModuleRoute>
-                  }
-                />
-
+                {/* Teacher Management (Removed) */}
+                <Route path="teachers" element={<Navigate to="/dashboard" replace />} />
+                <Route path="teachers/*" element={<Navigate to="/dashboard" replace />} />
                 {/* Classes & Sections */}
                 <Route path="classes" element={<ClassManager />} />
 
@@ -133,16 +116,9 @@ export default function App() {
                 />
                 <Route path="exams" element={<Navigate to="/marksheet" replace />} />
 
-                {/* Section-Wise Timetable Management */}
-                <Route
-                  path="timetable"
-                  element={
-                    <ModuleRoute module="timetable">
-                      <Timetable />
-                    </ModuleRoute>
-                  }
-                />
-
+                {/* Timetable Management (Removed) */}
+                <Route path="timetable" element={<Navigate to="/dashboard" replace />} />
+                <Route path="timetable/*" element={<Navigate to="/dashboard" replace />} />
                 {/* Academic Years & Sessions */}
                 <Route
                   path="academic-years"
@@ -172,6 +148,6 @@ export default function App() {
           </AuthProvider>
         </LicenseProvider>
       </ToastProvider>
-    </BrowserRouter>
+    </Router>
   );
 }
